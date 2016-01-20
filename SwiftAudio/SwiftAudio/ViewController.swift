@@ -15,6 +15,12 @@ class ViewController: UIViewController {
     
     var playingFlag:Bool = false
     
+    @IBOutlet weak var audioSlider: UISlider!
+    
+    @IBAction func sliderChanged(sender: AnyObject) {
+        audioPlayer.currentTime = Double(audioSlider.value) * audioPlayer.duration
+        NSLog("slider value = %f", audioSlider.value);
+    }
     
     override func viewDidLoad() {
         self.loadAudio()
@@ -64,27 +70,25 @@ class ViewController: UIViewController {
         
     }
     
+    var updater : CADisplayLink! = nil
     func playAudio(){
-        do{
-            try audioPlayer.play()
-        }catch{
-            print("Error in PlayAudio")
-        }
+            updater = CADisplayLink(target: self, selector: Selector("updateSliderProgress"))
+            updater.frameInterval = 1
+            updater.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSRunLoopCommonModes)
+            audioPlayer.play()
     }
     func pauseAudio(){
-        do{
-            try audioPlayer.pause()
-        }catch{
-            print("Error in PauseAudio")
-        }
+        audioPlayer.pause()
     }
     
     func stopAudio(){
-        do{
-            try audioPlayer.stop()
-        }catch{
-            print("Error in StopAudio")
-        }
+        audioPlayer.stop()
+        updater.invalidate()
+    }
+    
+    func updateSliderProgress(){
+        let progress = audioPlayer.currentTime / audioPlayer.duration
+        audioSlider.setValue(Float(progress), animated: false)
     }
 
 }
