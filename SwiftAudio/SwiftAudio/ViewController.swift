@@ -35,7 +35,6 @@ class ViewController: UIViewController {
             playingFlag = true
             self.playAudio()
         }
-        
     }
     
     func loadAudio(){
@@ -76,7 +75,15 @@ class ViewController: UIViewController {
         do{
             try audioPlayer.pause()
         }catch{
-            print("Error in PlayAudio")
+            print("Error in PauseAudio")
+        }
+    }
+    
+    func stopAudio(){
+        do{
+            try audioPlayer.stop()
+        }catch{
+            print("Error in StopAudio")
         }
     }
 
